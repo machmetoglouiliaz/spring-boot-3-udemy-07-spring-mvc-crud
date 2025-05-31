@@ -4,10 +4,7 @@ import com.mourat.udemy.employeesdemo.dao.EmployeeJPARepository;
 import com.mourat.udemy.employeesdemo.entity.Employee;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,7 +21,7 @@ public class EmployeeController {
     @GetMapping("/list")
     public String listEmployees(Model model){
 
-        List<Employee> employees = repo.findAll();
+        List<Employee> employees = repo.findAllByOrderByLastNameAsc();
 
         model.addAttribute("employees", employees);
 
@@ -44,5 +41,12 @@ public class EmployeeController {
         repo.save(employee);
 
         return "redirect:/employees/list";
+    }
+
+    @GetMapping("/showUpdateForm")
+    public String showUpdateForm(@RequestParam("employeeId") int id, Model model){
+        model.addAttribute("employee", repo.findById(id));
+
+        return "employee-form";
     }
 }
